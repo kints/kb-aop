@@ -17,6 +17,8 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 //@PropertySource("classpath:/dev.parameters")
@@ -37,10 +39,20 @@ public class KBConfiguration {
     }
 
     @Bean
-    public RepositoryDAO repositoryDAO(){
-        RepositoryDAO repositoryDAOBB =  new JDBCMySQLExceptionDAO();
-        repositoryDAOBB.setDataSource(dataSource());
-        return repositoryDAOBB;
+    public List<RepositoryDAO> repositoryDAO(){
+
+        RepositoryDAO repositoryDAOException =  new JDBCMySQLExceptionDAO();
+        repositoryDAOException.setDataSource(dataSource());
+
+        RepositoryDAO repositoryDAOBadPerformace= new JDBCMYSQLBadPerformaceDAO();
+        repositoryDAOBadPerformace.setDataSource(dataSource());
+
+
+        return new ArrayList()
+        {{
+            add(repositoryDAOException);
+            add(repositoryDAOBadPerformace);
+        }};
     }
 
     @Bean
@@ -54,7 +66,7 @@ public class KBConfiguration {
     }
 
     @Bean
-    public KBRavisaAudit ravisaAudit(RepositoryDAO repositoryDAO){ return new KBRavisaAudit(repositoryDAO); }
+    public KBRavisaAudit ravisaAudit(ArrayList<RepositoryDAO> repositoryDAO){ return new KBRavisaAudit(repositoryDAO); }
 
     @Bean
     public KBLogs logs(){

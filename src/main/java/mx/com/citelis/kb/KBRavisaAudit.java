@@ -7,18 +7,27 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 
 @Aspect
 public class KBRavisaAudit {
     RepositoryDAO repositoryDAOBB;
+    RepositoryDAO repositoryDAOBP;
     public KBRavisaAudit() {
     }
 
     public KBRavisaAudit(RepositoryDAO repositoryDAOBB) {
         this.repositoryDAOBB = repositoryDAOBB;
+    }
+
+    public KBRavisaAudit(ArrayList<RepositoryDAO> replist) {
+        //ArrayList<RepositoryDAO>  list = replist;
+        this.repositoryDAOBB = replist.get(0);
+        this.repositoryDAOBP = replist.get(1);
     }
 
     Logger log = Logger.getLogger("[Exceptions]");
@@ -80,7 +89,16 @@ public class KBRavisaAudit {
            // log.info(""+Long.parseLong(PERFORMANCE_MAXMS));
             if (totalTime >= 5000)//Long.parseLong(PERFORMANCE_MAXMS))
             {
+
                 log.info("The method: "+jp.getSignature().getName()+" ran in "+totalTime+" ms");
+                AppBadPerformace appBP =new AppBadPerformace(
+                        jp.getSignature().getClass().getName(),
+                        jp.getSignature().getName(),
+                        totalTime,
+                        LocalDateTime.now()
+                );
+                repositoryDAOBP.insert(appBP);
+
             }
         }
     }
