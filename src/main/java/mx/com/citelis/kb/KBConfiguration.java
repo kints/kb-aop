@@ -24,6 +24,7 @@ import java.util.List;
 //@PropertySource("classpath:/dev.parameters")
 @EnableAspectJAutoProxy
 @EnableCaching
+@PropertySource("classpath:ravisaAudit.properties")
 public class KBConfiguration {
     //protected static final String PERFORMANCE_MAXMS = "performance.maxms";
    // @Autowired Environment env;

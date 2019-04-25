@@ -17,6 +17,11 @@ import java.util.logging.Logger;
 public class KBRavisaAudit {
     RepositoryDAO repositoryDAOBB;
     RepositoryDAO repositoryDAOBP;
+
+    //Variable used for the max time a method can take
+    @Value("${maxTime}")
+    private int maxTime;
+
     public KBRavisaAudit() {
     }
 
@@ -87,7 +92,7 @@ public class KBRavisaAudit {
             long end = System.currentTimeMillis();
             long totalTime = end - start;
            // log.info(""+Long.parseLong(PERFORMANCE_MAXMS));
-            if (totalTime >= 5000)//Long.parseLong(PERFORMANCE_MAXMS))
+            if (totalTime >= maxTime)//Long.parseLong(PERFORMANCE_MAXMS))
             {
 
                 log.info("The method: "+jp.getSignature().getName()+" ran in "+totalTime+" ms");
